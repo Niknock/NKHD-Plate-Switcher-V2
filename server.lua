@@ -27,36 +27,60 @@ AddEventHandler('nkhd_changePlate:removeTapeItem', function()
         xPlayer.removeInventoryItem('tape', 1)
     else
         if Config.Debug == true then
-            print("Error: Player not found - player ID: " .. _source) -- Debug
+            print("Error: Player not found - player ID: " .. _source)
         end
     end
 end)
 
-RegisterServerEvent('nkhd_changePlate:iden')
-AddEventHandler('nkhd_changePlate:iden', function(identifier)
+RegisterServerEvent('nkhd_changePlate:getIdentifier')
+AddEventHandler('nkhd_changePlate:getIdentifier', function()
     local _source = source
-    local xTarget = ESX.GetPlayerFromId(_source)
-
-    identifiernn = xTarget.identifier
-
-    TriggerClientEvent('nkhd_changePlate:returniden', source, identifiernn)
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local identifier = xPlayer.identifier
+    TriggerClientEvent('nkhd_changePlate:receiveIdentifier', _source, identifier)
 end)
-
 
 local oxmysql = exports.oxmysql
 
 RegisterServerEvent('nkhd_changePlate:savePlateData')
 AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, model)
     local _source = source
-    local xTarget = ESX.GetPlayerFromId(_source)
+    local xTarget = nil
+
+    if xTarget == nil then
+        xTarget = ESX.GetPlayerFromId(_source)
+    end
 
     if oxmysql then
         MySQL.insert('INSERT INTO plateswitcher (identifier, plate, model) VALUES (?, ?, ?)', {xTarget.identifier, plate, model}
         )          
-    else
-        print("Fehler: oxmysql ist nil oder nicht initialisiert.")
     end
 end)
+
+RegisterServerEvent('nkhd_changePlate:deletePlateData')
+AddEventHandler('nkhd_changePlate:deletePlateData', function(platenn, modelnn)
+    local _source = source
+    local xTarget = ESX.GetPlayerFromId(_source)
+    local plate = platenn
+    local model = modelnn
+
+    if oxmysql then
+        MySQL.Async.execute(
+            'DELETE FROM plateswitcher WHERE identifier = @identifier AND plate = @plate AND model = @model',
+            {
+                ['@identifier'] = xTarget.identifier,
+                ['@plate'] = plate,
+                ['@model'] = model
+            },
+            function(rowsChanged)
+                if Config.Debug == true then
+                    print('Deleted rows: ' .. rowsChanged)
+                end
+            end
+        )
+    end
+end)
+
 
 RegisterServerEvent('nkhd_changePlate:getPlateData')
 AddEventHandler('nkhd_changePlate:getPlateData', function()

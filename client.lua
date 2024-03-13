@@ -23,6 +23,13 @@ AddEventHandler('nkhd_changePlate:receivePlateSwitcherData', function(data)
     end
 end)
 
+local identifiert = {}
+
+RegisterNetEvent('nkhd_changePlate:receiveIdentifier')
+AddEventHandler('nkhd_changePlate:receiveIdentifier', function(identifier)
+    identifiert = identifier
+end)
+
 local taped = false
 
 RegisterNetEvent('nkhd_changePlate:applyTape')
@@ -71,11 +78,18 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
 
         if taped == true then
             if #(playerCoords - vehicleCoords) < 3.0 then
-                SetVehicleNumberPlateText(lastVehicle, platen)
-                SetVehicleNumberPlateTextIndex(vehicle, 0) -- Set here your Numberplate ID, which you want to have, when it got scraped off
-                playAnimationab(false)
-                taped = false
-            else
+                if identifiert == identifiern then
+                    SetVehicleNumberPlateText(lastVehicle, platen)
+                    SetVehicleNumberPlateTextIndex(vehicle, 0) -- Set here your Numberplate ID, which you want to have, when it got scraped off
+                    playAnimationab(false)
+                    taped = false
+                    local platenn = platen
+                    local modelnn = modeln
+                    TriggerServerEvent('nkhd_changePlate:deletePlateData', platenn, modelnn)
+                else
+                    ESX.ShowNotification(_U('noveh'))
+                end 
+                else
              ESX.ShowNotification(_U('closer'))
             end
         else
@@ -138,6 +152,7 @@ function IsVehicleWithUndercoverPlate(vehicle)
 end
 
 while true do
+    TriggerServerEvent('nkhd_changePlate:getIdentifier', source)
     TriggerServerEvent('nkhd_changePlate:getPlateData')
     Citizen.Wait(100)
 end

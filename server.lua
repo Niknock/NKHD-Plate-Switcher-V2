@@ -35,8 +35,13 @@ end)
 RegisterServerEvent('nkhd_changePlate:getIdentifier')
 AddEventHandler('nkhd_changePlate:getIdentifier', function()
     local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
-    local identifier = xPlayer.identifier
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local identifier = nil
+
+    if xPlayer and identifier == nil then
+         identifier = xPlayer.identifier
+    end
+
     TriggerClientEvent('nkhd_changePlate:receiveIdentifier', _source, identifier)
 end)
 

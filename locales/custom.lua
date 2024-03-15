@@ -1,9 +1,11 @@
 Locales['custom'] = {
-
-    ['applying']					= 'Du bringst das Tape an...',
-    ['scraping_off']				= 'Du kratzt das Tape runter...',
-    ['closer']					= 'Du musst näher an einem Kofferaum stehen!',
-    ['outofveh']				= 'Du musst auserhalb des Fahrzeuges sein!',
-    ['noveh']					= 'Es ist kein Fahrzeug in der nähe',
     
-    }
+    ['applying']                = 'You are applying the tape...',
+    ['scraping_off']            = 'You are scraping off the tape...',
+    ['closer']                  = 'You need to be closer to a trunk!',
+    ['outofveh']                = 'You must be outside of the vehicle!',
+    ['noveh']                   = 'There is no vehicle nearby',
+    ['noitem']					= 'You dont have any tape on you!',
+    ['noitemm']					= 'You dont have any tape remover on you!',
+
+}

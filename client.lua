@@ -126,6 +126,7 @@ AddEventHandler('nkhd_changePlate:receiveIdentifier', function(identifier)
     identifiert = identifier
 end)
 
+local originalPlates = {}
 local taped = false
 
 RegisterNetEvent('nkhd_changePlate:applyTape')
@@ -144,10 +145,12 @@ AddEventHandler('nkhd_changePlate:applyTape', function()
                 local vehiclesave = GetEntityModel(lastVehicle)
                 local plate = GetVehicleNumberPlateText(lastVehicle)
                 taped = true
+                originalPlates[lastVehicle] = plate
                 TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave)
                 SetVehicleNumberPlateText(lastVehicle, " ") -- If you want to change the Numberplate, you can set it here
                 makePlateInvisible(lastVehicle)
                 TriggerServerEvent('nkhd_changePlate:removeTapeItem')
+                originalPlates[vehicle] = nil
 
                 playAnimation()  -- Starts the Animation and the ProgressBar
 
@@ -247,10 +250,11 @@ function IsVehicleWithUndercoverPlate(vehicle)
     end
 end
 
+exports('IsVehicleWithUndercoverPlate', IsVehicleWithUndercoverPlate)
+
 while true do
     TriggerServerEvent('nkhd_changePlate:getIdentifier')
     TriggerServerEvent('nkhd_changePlate:getPlateData')
     Citizen.Wait(100)
 end
 
-exports('IsVehicleWithUndercoverPlate', IsVehicleWithUndercoverPlate)

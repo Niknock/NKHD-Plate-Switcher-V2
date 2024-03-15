@@ -8,15 +8,19 @@ else
     print('Wrong ESX Type!')
 end
 
-ESX.RegisterUsableItem('tape', function(source)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    TriggerClientEvent('nkhd_changePlate:applyTape', source)
-end)
+if Config.OxTarget == false then
+    ESX.RegisterUsableItem('tape', function(source)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        TriggerClientEvent('nkhd_changePlate:applyTape', source)
+    end)
+end
 
-ESX.RegisterUsableItem('tape_remover', function(source)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    TriggerClientEvent('nkhd_changePlate:removeTape', source)
-end)
+if Config.OxTarget == false then
+    ESX.RegisterUsableItem('tape_remover', function(source)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        TriggerClientEvent('nkhd_changePlate:removeTape', source)
+    end)
+end
 
 RegisterServerEvent('nkhd_changePlate:removeTapeItem')
 AddEventHandler('nkhd_changePlate:removeTapeItem', function()

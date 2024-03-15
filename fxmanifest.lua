@@ -22,7 +22,10 @@ server_script{
 	'server.lua',
 }
 
-shared_script '@es_extended/imports.lua'
+shared_scripts {
+    '@ox_lib/init.lua',
+    '@es_extended/imports.lua'
+}
 
 dependencies {
 	'es_extended',

@@ -152,7 +152,7 @@ function IsVehicleWithUndercoverPlate(vehicle)
 end
 
 while true do
-    TriggerServerEvent('nkhd_changePlate:getIdentifier', source)
+    TriggerServerEvent('nkhd_changePlate:getIdentifier')
     TriggerServerEvent('nkhd_changePlate:getPlateData')
     Citizen.Wait(100)
 end

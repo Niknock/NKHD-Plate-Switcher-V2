@@ -22,6 +22,39 @@ if Config.OxTarget == false then
     end)
 end
 
+RegisterServerEvent('nkhd_changePlate:checkitem')
+AddEventHandler('nkhd_changePlate:checkitem', function()
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    
+    if xPlayer.getInventoryItem("tape") ~= nil then
+        if xPlayer.getInventoryItem("tape").count > 0 then
+            TriggerClientEvent('nkhd_changePlate:applyTape', source)
+        else
+            TriggerClientEvent('nkhd_changePlate:noitem', source)
+        end
+    end
+
+end)
+
+RegisterServerEvent('nkhd_changePlate:checkitemm')
+AddEventHandler('nkhd_changePlate:checkitemm', function()
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    
+    if Config.RemoveTapeRemover then
+        if xPlayer.getInventoryItem("tape_remover") ~= nil then
+            if xPlayer.getInventoryItem("tape_remover").count > 0 then
+                TriggerClientEvent('nkhd_changePlate:removeTape', source)
+            else
+                TriggerClientEvent('nkhd_changePlate:noitemm', source)
+            end
+        end
+    else
+        TriggerClientEvent('nkhd_changePlate:removeTape', source)
+    end
+end)
+
 RegisterServerEvent('nkhd_changePlate:removeTapeItem')
 AddEventHandler('nkhd_changePlate:removeTapeItem', function()
     local _source = source
@@ -29,6 +62,23 @@ AddEventHandler('nkhd_changePlate:removeTapeItem', function()
 
     if xPlayer then
         xPlayer.removeInventoryItem('tape', 1)
+    else
+        if Config.Debug == true then
+            print("Error: Player not found - player ID: " .. _source)
+        end
+    end
+end)
+
+RegisterServerEvent('nkhd_changePlate:removeTapeRemoverItem')
+AddEventHandler('nkhd_changePlate:removeTapeRemoverItem', function()
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+
+    if xPlayer then
+        if Config.RemoveTapeRemover then
+            xPlayer.removeInventoryItem('tape_remover', 1)
+        else
+        end
     else
         if Config.Debug == true then
             print("Error: Player not found - player ID: " .. _source)
@@ -101,3 +151,4 @@ AddEventHandler('nkhd_changePlate:getPlateData', function()
         TriggerClientEvent('nkhd_changePlate:receivePlateSwitcherData', source, result)
     end)
 end)
+

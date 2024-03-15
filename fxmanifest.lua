@@ -31,4 +31,5 @@ shared_scripts {
 dependencies {
 	'es_extended',
 	'oxmysql',
+	'progressBars',
 }

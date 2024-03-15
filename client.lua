@@ -86,7 +86,7 @@ if Config.OxTarget then
             return canInteractWithDoor(entity, coords, 5, true)
         end,
         onSelect = function(data)
-            TriggerEvent('nkhd_changePlate:applyTape', source)
+            TriggerServerEvent('nkhd_changePlate:checkitem', source)
         end
     },
     {
@@ -99,12 +99,11 @@ if Config.OxTarget then
             return canInteractWithDoor(entity, coords, 5, true)
         end,
         onSelect = function(data)
-            TriggerEvent('nkhd_changePlate:removeTape', source)
+            TriggerServerEvent('nkhd_changePlate:checkitemm', source)
         end
     }
     })
 end
-
 
 -- Main
 
@@ -163,7 +162,7 @@ AddEventHandler('nkhd_changePlate:applyTape', function()
     else
         ESX.ShowNotification(_U('outofveh')) 
     end
-end)
+end) 
 
 RegisterNetEvent('nkhd_changePlate:removeTape')
 AddEventHandler('nkhd_changePlate:removeTape', function()
@@ -178,6 +177,7 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
         if taped == true then
             if #(playerCoords - vehicleCoords) < 3.0 then
                 if identifiert == identifiern then
+                    TriggerServerEvent('nkhd_changePlate:removeTapeRemoverItem')
                     SetVehicleNumberPlateText(lastVehicle, platen)
                     SetVehicleNumberPlateTextIndex(vehicle, 0) -- Set here your Numberplate ID, which you want to have, when it got scraped off
                     playAnimationab(false)
@@ -197,6 +197,16 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
     else
         ESX.ShowNotification(_U('noveh'))
     end 
+end)
+
+RegisterNetEvent('nkhd_changePlate:noitem')
+AddEventHandler('nkhd_changePlate:noitem', function()
+        ESX.ShowNotification(_U('noitem'))
+end)
+
+RegisterNetEvent('nkhd_changePlate:noitemm')
+AddEventHandler('nkhd_changePlate:noitemm', function()
+        ESX.ShowNotification(_U('noitemm'))
 end)
 
 

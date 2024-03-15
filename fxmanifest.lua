@@ -4,8 +4,8 @@ game 'gta5'
 lua54 'yes'
 
 author 'Niknock HD'
-description 'Plate Changer V2'
-version '2.0.0'
+description 'Plate Changer V2.1'
+version '2.1.0'
 
 client_script{
 	'client.lua',

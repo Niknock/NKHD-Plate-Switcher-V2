@@ -140,19 +140,22 @@ AddEventHandler('nkhd_changePlate:applyTape', function()
             local playerCoords = GetEntityCoords(playerPed)
             local vehicleCoords = GetEntityCoords(lastVehicle)
 
-            if #(playerCoords - vehicleCoords) < 3.0 then
-                local vehiclesave = GetEntityModel(lastVehicle)
-                local plate = GetVehicleNumberPlateText(lastVehicle)
-                taped = true
-                originalPlates[lastVehicle] = plate
-                TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave)
-                SetVehicleNumberPlateText(lastVehicle, " ") -- If you want to change the Numberplate, you can set it here
-                makePlateInvisible(lastVehicle)
-                TriggerServerEvent('nkhd_changePlate:removeTapeItem')
-                originalPlates[vehicle] = nil
+            if #(playerCoords - vehicleCoords) < 10.0 then
+                    local vehiclesave = GetEntityModel(lastVehicle)
+                    local plate = GetVehicleNumberPlateText(lastVehicle)
+                    taped = true
+                    originalPlates[lastVehicle] = plate
+                    TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave)
+                    if Config.AdvancedParking then
+                        exports["AdvancedParking"]:UpdatePlate(lastVehicle, " ")
+                    else
+                        SetVehicleNumberPlateText(lastVehicle, " ") -- If you want to change the Numberplate, you can set it here
+                        makePlateInvisible(lastVehicle)
+                    end
+                    TriggerServerEvent('nkhd_changePlate:removeTapeItem')
+                    originalPlates[vehicle] = nil
 
                 playAnimation()  -- Starts the Animation and the ProgressBar
-
             else
                 ESX.ShowNotification(_U('closer')) 
             end
@@ -175,15 +178,19 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
         local vehicleCoords = GetEntityCoords(vehicle)
 
         if taped == true then
-            if #(playerCoords - vehicleCoords) < 3.0 then
+            if #(playerCoords - vehicleCoords) < 10.0 then
                 if identifiert == identifiern then
-                    TriggerServerEvent('nkhd_changePlate:removeTapeRemoverItem')
-                    SetVehicleNumberPlateText(lastVehicle, platen)
+                    if Config.AdvancedParking then 
+                        exports["AdvancedParking"]:UpdatePlate(vehicle, platen[vehicle])
+                    else
+                        SetVehicleNumberPlateText(lastVehicle, platen)
+                    end
                     SetVehicleNumberPlateTextIndex(vehicle, 0) -- Set here your Numberplate ID, which you want to have, when it got scraped off
                     playAnimationab(false)
                     taped = false
                     local platenn = platen
                     local modelnn = modeln
+                    TriggerServerEvent('nkhd_changePlate:removeTapeRemoverItem')
                     TriggerServerEvent('nkhd_changePlate:deletePlateData', platenn, modelnn)
                 else
                     ESX.ShowNotification(_U('noveh'))
@@ -227,7 +234,8 @@ function playAnimation()
 
     TaskPlayAnim(playerPed, animDict, animName, 8.0, -8.0, -1, 49, 0, false, false, false)
 
-    exports['progressBars']:startUI(duration, _U('applying')) -- If you want to use your own ProgressBar, and your own Translation
+    ESX.Progressbar(_U('scraping_off'), 3000)
+    --exports['progressBars']:startUI(duration, _U('applying')) -- If you want to use your own ProgressBar, and your own Translation
 
     Citizen.Wait(duration)
     ClearPedTasks(playerPed)
@@ -246,7 +254,8 @@ function playAnimationab()
 
     TaskPlayAnim(playerPed, animDict, animName, 8.0, -8.0, -1, 49, 0, false, false, false)
 
-    exports['progressBars']:startUI(duration, _U('scraping_off')) -- If you want to use your own ProgressBar
+    ESX.Progressbar(_U('scraping_off'), 3000)
+    --exports['progressBars']:startUI(duration, _U('scraping_off')) -- If you want to use your own ProgressBar
 
     Citizen.Wait(duration)
     ClearPedTasks(playerPed)

@@ -217,7 +217,6 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
                     taped = false
                     local platenn = platen
                     local modelnn = modeln
-                    FreezeEntityPosition(playerPed, true)
                     TriggerServerEvent('nkhd_changePlate:removeTapeRemoverItem')
                     TriggerServerEvent('nkhd_changePlate:deletePlateData', platenn, modelnn)
 

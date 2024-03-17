@@ -37,12 +37,15 @@ local function toggleDoor(vehicle, door)
     end
 end
 
+local taped = false
+
 ---@param entity number
 ---@param coords vector3
 ---@param door number
 ---@param useOffset boolean?
 ---@return boolean?
 local function canInteractWithDoor(entity, coords, door, useOffset)
+    if taped == false then
     if not GetIsDoorValid(entity, door) or GetVehicleDoorLockStatus(entity) > 1 or IsVehicleDoorDamaged(entity, door) then return end
 
     if useOffset then return true end
@@ -56,6 +59,31 @@ local function canInteractWithDoor(entity, coords, door, useOffset)
     if boneId ~= -1 then
         return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or
             #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_' .. boneName))) < 0.72
+    end
+    end
+end
+
+---@param entity number
+---@param coords vector3
+---@param door number
+---@param useOffset boolean?
+---@return boolean?
+local function canInteractWithDoorr(entity, coords, door, useOffset)
+    if taped then
+    if not GetIsDoorValid(entity, door) or GetVehicleDoorLockStatus(entity) > 1 or IsVehicleDoorDamaged(entity, door) then return end
+
+    if useOffset then return true end
+
+    local boneName = bones[door]
+
+    if not boneName then return false end
+
+    boneId = GetEntityBoneIndexByName(entity, 'door_' .. boneName)
+
+    if boneId ~= -1 then
+        return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or
+            #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_' .. boneName))) < 0.72
+    end
     end
 end
 
@@ -96,7 +124,7 @@ if Config.OxTarget then
         offset = vec3(0.5, 0, 0.5),
         distance = 2,
         canInteract = function(entity, distance, coords, name)
-            return canInteractWithDoor(entity, coords, 5, true)
+            return canInteractWithDoorr(entity, coords, 5, true)
         end,
         onSelect = function(data)
             TriggerServerEvent('nkhd_changePlate:checkitemm', source)
@@ -126,7 +154,6 @@ AddEventHandler('nkhd_changePlate:receiveIdentifier', function(identifier)
 end)
 
 local originalPlates = {}
-local taped = false
 
 RegisterNetEvent('nkhd_changePlate:applyTape')
 AddEventHandler('nkhd_changePlate:applyTape', function()
@@ -176,6 +203,7 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
     if vehicle then
         local playerCoords = GetEntityCoords(playerPed)
         local vehicleCoords = GetEntityCoords(vehicle)
+        local playerPed = PlayerPedId() 
 
         if taped == true then
             if #(playerCoords - vehicleCoords) < 10.0 then
@@ -186,12 +214,14 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
                         SetVehicleNumberPlateText(lastVehicle, platen)
                     end
                     SetVehicleNumberPlateTextIndex(vehicle, 0) -- Set here your Numberplate ID, which you want to have, when it got scraped off
-                    playAnimationab(false)
                     taped = false
                     local platenn = platen
                     local modelnn = modeln
+                    FreezeEntityPosition(playerPed, true)
                     TriggerServerEvent('nkhd_changePlate:removeTapeRemoverItem')
                     TriggerServerEvent('nkhd_changePlate:deletePlateData', platenn, modelnn)
+
+                    playAnimationab()  -- Starts the Animation and the ProgressBar
                 else
                     ESX.ShowNotification(_U('noveh'))
                 end 
@@ -227,6 +257,10 @@ function playAnimation()
     local animName = "fixing_a_ped"
     local duration = 5000 -- Duration of the Animation, Currently 5 Seconds
 
+    if Config.FreezePlayer then
+        FreezeEntityPosition(playerPed, true)
+    end
+
     RequestAnimDict(animDict)
     while not HasAnimDictLoaded(animDict) do
         Citizen.Wait(100)
@@ -234,11 +268,18 @@ function playAnimation()
 
     TaskPlayAnim(playerPed, animDict, animName, 8.0, -8.0, -1, 49, 0, false, false, false)
 
-    ESX.Progressbar(_U('scraping_off'), 3000)
-    --exports['progressBars']:startUI(duration, _U('applying')) -- If you want to use your own ProgressBar, and your own Translation
+    if Config.ProgressBar == 'ESX' then
+        ESX.Progressbar(_U('applying'), 3000)
+    elseif Config.ProgressBar == 'progressBars' then
+        exports['progressBars']:startUI(duration, _U('applying')) -- If you want to use your own ProgressBar, and your own Translation
+    elseif Config.ProgressBar == 'custom' then
+    end
 
     Citizen.Wait(duration)
     ClearPedTasks(playerPed)
+    if Config.FreezePlayer then
+        FreezeEntityPosition(playerPed, false)
+    end
 end
 
 function playAnimationab()
@@ -247,6 +288,10 @@ function playAnimationab()
     local animName = "fixing_a_ped"
     local duration = 5000 -- Duration of the Animation, Currently 5 Seconds
 
+    if Config.FreezePlayer then
+        FreezeEntityPosition(playerPed, true)
+    end
+
     RequestAnimDict(animDict)
     while not HasAnimDictLoaded(animDict) do
         Citizen.Wait(100)
@@ -254,11 +299,18 @@ function playAnimationab()
 
     TaskPlayAnim(playerPed, animDict, animName, 8.0, -8.0, -1, 49, 0, false, false, false)
 
-    ESX.Progressbar(_U('scraping_off'), 3000)
-    --exports['progressBars']:startUI(duration, _U('scraping_off')) -- If you want to use your own ProgressBar
+    if Config.ProgressBar == 'ESX' then
+        ESX.Progressbar(_U('scraping_off'), 3000)
+    elseif Config.ProgressBar == 'progressBars' then
+        exports['progressBars']:startUI(duration, _U('scraping_off')) -- If you want to use your own ProgressBar, and your own Translation
+    elseif Config.ProgressBar == 'custom' then
+    end
 
     Citizen.Wait(duration)
     ClearPedTasks(playerPed)
+    if Config.FreezePlayer then
+        FreezeEntityPosition(playerPed, false)
+    end
 end
 
 function IsVehicleWithUndercoverPlate(vehicle)
@@ -269,6 +321,8 @@ function IsVehicleWithUndercoverPlate(vehicle)
     end
 end
 
+-- Other Stuff
+
 exports('IsVehicleWithUndercoverPlate', IsVehicleWithUndercoverPlate)
 
 while true do
@@ -276,4 +330,3 @@ while true do
     TriggerServerEvent('nkhd_changePlate:getPlateData')
     Citizen.Wait(100)
 end
-

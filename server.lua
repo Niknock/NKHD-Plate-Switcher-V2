@@ -53,23 +53,19 @@ AddEventHandler('nkhd_changePlate:checkitemm', function()
     local xPlayer = ESX.GetPlayerFromId(_source)
     
     if Config.OxInventory then
-        if Config.RemoveTapeRemover then
-            local items = ox_inventory:Search(source, 'count', {'tape_remover'})
-            if items and items.tape_remover > 0 then
-                TriggerClientEvent('nkhd_changePlate:removeTape', source)
-            else
-                TriggerClientEvent('nkhd_changePlate:noitemm', source)
-            end
-    elseif Config.RemoveTapeRemover then
-        if xPlayer.getInventoryItem("tape_remover") ~= nil then
-            if xPlayer.getInventoryItem("tape_remover").count > 0 then
-                TriggerClientEvent('nkhd_changePlate:removeTape', source)
-            else
-                TriggerClientEvent('nkhd_changePlate:noitemm', source)
-            end
+        local items = ox_inventory:Search(source, 'count', {'tape_remover'})
+        if items and items.tape > 0 then
+            TriggerClientEvent('nkhd_changePlate:removeTape', source)
+        else
+            TriggerClientEvent('nkhd_changePlate:noitemm', source)
         end
     else
-        TriggerClientEvent('nkhd_changePlate:removeTape', source)
+    if xPlayer.getInventoryItem("tape_remover") ~= nil then
+        if xPlayer.getInventoryItem("tape_remover").count > 0 then
+            TriggerClientEvent('nkhd_changePlate:removeTape', source)
+        else
+            TriggerClientEvent('nkhd_changePlate:noitemm', source)
+        end
     end
 end
 end)

@@ -30,8 +30,8 @@ AddEventHandler('nkhd_changePlate:checkitem', function()
     local xPlayer = ESX.GetPlayerFromId(_source)
     
     if Config.OxInventory then
-        local items = ox_inventory:Search(source, 'count', {'tape'})
-        if items and items.tape > 0 then
+        local items = exports.ox_inventory:GetItem(soruce, 'tape', nil, true)
+        if items and items > 0 then
             TriggerClientEvent('nkhd_changePlate:applyTape', source)
         else
             TriggerClientEvent('nkhd_changePlate:noitem', source)

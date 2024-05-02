@@ -5,5 +5,6 @@ INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 CREATE TABLE IF NOT EXISTS `plateswitcher` (
   `identifier` varchar(50) COLLATE utf8mb4_bin NOT NULL,
   `plate` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
-  `model` varchar(50) COLLATE utf8mb4_bin DEFAULT ''
+  `model` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
+  `paltem` varchar(50) COLLATE utf8mb4_bin DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

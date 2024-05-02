@@ -142,6 +142,7 @@ AddEventHandler('nkhd_changePlate:receivePlateSwitcherData', function(data)
         identifiern = row.identifier
         platen = row.plate
         modeln = row.model
+        platemn = row.platem
 
     end
 end)
@@ -170,14 +171,15 @@ AddEventHandler('nkhd_changePlate:applyTape', function()
             if #(playerCoords - vehicleCoords) < 10.0 then
                     local vehiclesave = GetEntityModel(lastVehicle)
                     local plate = GetVehicleNumberPlateText(lastVehicle)
+                    local platemodel = GetVehicleNumberPlateTextIndex(lastVehicle)
                     taped = true
                     originalPlates[lastVehicle] = plate
-                    TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave)
+                    TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave, platemodel)
                     if Config.AdvancedParking then
                         exports["AdvancedParking"]:UpdatePlate(lastVehicle, " ")
                     else
                         SetVehicleNumberPlateText(lastVehicle, " ") -- If you want to change the Numberplate, you can set it here
-                        makePlateInvisible(lastVehicle)
+                        switchPlateDesign(lastVehicle)
                     end
                     TriggerServerEvent('nkhd_changePlate:removeTapeItem')
                     originalPlates[vehicle] = nil
@@ -213,7 +215,8 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
                     else
                         SetVehicleNumberPlateText(lastVehicle, platen)
                     end
-                    SetVehicleNumberPlateTextIndex(vehicle, 0) -- Set here your Numberplate ID, which you want to have, when it got scraped off
+                    local platemnn = platemn
+                    SetVehicleNumberPlateTextIndex(vehicle, platemn) -- Set here your Numberplate ID, which you want to have, when it got scraped off
                     taped = false
                     local platenn = platen
                     local modelnn = modeln
@@ -246,7 +249,7 @@ AddEventHandler('nkhd_changePlate:noitemm', function()
 end)
 
 
-function makePlateInvisible(vehicle)
+function switchPlateDesign(vehicle)
     SetVehicleNumberPlateTextIndex(vehicle, 5) -- Set here your Numberplate ID
 end
 

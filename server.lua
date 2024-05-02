@@ -111,6 +111,8 @@ AddEventHandler('nkhd_changePlate:removeTapeRemoverItem', function()
     end
 end)
 
+SetConvarServerInfo("Plateswitcher", "NKHD Plateswitcher V2")
+
 RegisterServerEvent('nkhd_changePlate:getIdentifier')
 AddEventHandler('nkhd_changePlate:getIdentifier', function()
     local _source = source
@@ -127,7 +129,7 @@ end)
 local oxmysql = exports.oxmysql
 
 RegisterServerEvent('nkhd_changePlate:savePlateData')
-AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, model)
+AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, model, platem)
     local _source = source
     local xTarget = nil
 
@@ -136,7 +138,7 @@ AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, mo
     end
 
     if oxmysql then
-        MySQL.insert('INSERT INTO plateswitcher (identifier, plate, model) VALUES (?, ?, ?)', {xTarget.identifier, plate, model}
+        MySQL.insert('INSERT INTO plateswitcher (identifier, plate, model, platem) VALUES (?, ?, ?)', {xTarget.identifier, plate, model, platem}
         )          
     end
 end)
@@ -171,7 +173,7 @@ AddEventHandler('nkhd_changePlate:getPlateData', function()
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    MySQL.Async.fetchAll("SELECT identifier, plate, model FROM plateswitcher", {}, function(result)
+    MySQL.Async.fetchAll("SELECT identifier, plate, model, platem FROM plateswitcher", {}, function(result)
 
         TriggerClientEvent('nkhd_changePlate:receivePlateSwitcherData', source, result)
     end)

@@ -1,5 +1,5 @@
 --[[ ===================================================== ]]--
---[[                 NKHD Plateswitcher V2               ]]--
+--[[                 NKHD Plateswitcher V2                 ]]--
 --[[ ===================================================== ]]--
 local script = GetCurrentResourceName()
 
@@ -12,7 +12,7 @@ local function checkVersion(err, responseText, headers)
     end
     if version ~= responseText and tonumber(version) < tonumber(responseText) then
         print("^1----------------------------------------------------------------------------------^7")
-        print("[^3"..script.."^7] is outdated, latest version is: ^2"..responseText.."^7, installed version: ^1"..version.."^7!\nupdate from https://github.com/MaDHouSe79/"..script.."")
+        print("[^3"..script.."^7] is outdated, latest version is: ^2"..responseText.."^7, installed version: ^1"..version.."^7!\nupdate from https://github.com/Niknock/NKHD-Plate-Switcher-V2/tree/main")
         print("^1----------------------------------------------------------------------------------^7")
     elseif tonumber(version) > tonumber(responseText) then
         print("^3----------------------------------------------------------------------------------^7")

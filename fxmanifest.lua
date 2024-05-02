@@ -4,11 +4,11 @@ game 'gta5'
 lua54 'yes'
 
 author 'Niknock HD'
-description 'Plate Changer V2.1'
-version '2.1.0'
+description 'Plate Changer V2.2'
+version '2.2.0'
 
 client_script{
-	'client.lua',
+	'client/client.lua',
 	'@es_extended/locale.lua',
 	'config.lua',
 	'locales/*.lua',
@@ -19,7 +19,8 @@ server_script{
 	'@oxmysql/lib/MySQL.lua',
 	'config.lua',
 	'locales/*.lua',
-	'server.lua',
+	'server/server.lua',
+	'server/update.lua'
 }
 
 shared_scripts {

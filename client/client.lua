@@ -142,7 +142,6 @@ AddEventHandler('nkhd_changePlate:receivePlateSwitcherData', function(data)
         identifiern = row.identifier
         platen = row.plate
         modeln = row.model
-        platemn = row.platem
 
     end
 end)
@@ -171,10 +170,9 @@ AddEventHandler('nkhd_changePlate:applyTape', function()
             if #(playerCoords - vehicleCoords) < 10.0 then
                     local vehiclesave = GetEntityModel(lastVehicle)
                     local plate = GetVehicleNumberPlateText(lastVehicle)
-                    local platemodel = GetVehicleNumberPlateTextIndex(lastVehicle)
                     taped = true
                     originalPlates[lastVehicle] = plate
-                    TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave, platemodel)
+                    TriggerServerEvent('nkhd_changePlate:savePlateData', source, plate, vehiclesave)
                     if Config.AdvancedParking then
                         exports["AdvancedParking"]:UpdatePlate(lastVehicle, " ")
                     else
@@ -215,8 +213,7 @@ AddEventHandler('nkhd_changePlate:removeTape', function()
                     else
                         SetVehicleNumberPlateText(lastVehicle, platen)
                     end
-                    local platemnn = platemn
-                    SetVehicleNumberPlateTextIndex(vehicle, platemn) -- Set here your Numberplate ID, which you want to have, when it got scraped off
+                    SetVehicleNumberPlateTextIndex(vehicle, 1) -- Set here your Numberplate ID, which you want to have, when it got scraped off
                     taped = false
                     local platenn = platen
                     local modelnn = modeln

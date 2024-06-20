@@ -173,7 +173,7 @@ AddEventHandler('nkhd_changePlate:getPlateData', function()
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    MySQL.Async.fetchAll("SELECT identifier, plate, model, platem FROM plateswitcher", {}, function(result)
+    MySQL.Async.fetchAll("SELECT identifier, plate, model FROM plateswitcher", {}, function(result)
 
         TriggerClientEvent('nkhd_changePlate:receivePlateSwitcherData', source, result)
     end)

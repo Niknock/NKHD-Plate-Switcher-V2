@@ -129,7 +129,7 @@ end)
 local oxmysql = exports.oxmysql
 
 RegisterServerEvent('nkhd_changePlate:savePlateData')
-AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, model, platem)
+AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, model)
     local _source = source
     local xTarget = nil
 
@@ -138,7 +138,7 @@ AddEventHandler('nkhd_changePlate:savePlateData', function(identifier, plate, mo
     end
 
     if oxmysql then
-        MySQL.insert('INSERT INTO plateswitcher (identifier, plate, model, platem) VALUES (?, ?, ?)', {xTarget.identifier, plate, model, platem}
+        MySQL.insert('INSERT INTO plateswitcher (identifier, plate, model) VALUES (?, ?, ?)', {xTarget.identifier, plate, model}
         )          
     end
 end)
